@@ -1,7 +1,5 @@
 package org.example.controller;
 
-
-
 import org.example.controller.AdditionController;
 import org.example.service.AdditionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,7 +29,7 @@ public class AdditionControllerTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(additionController).build();
     }
 
@@ -44,9 +43,35 @@ public class AdditionControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/add")
                         .param("num1", String.valueOf(num1))
-                        .param("num2", String.valueOf(num2)))
+                        .param("num2", String.valueOf(num2))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(String.valueOf(expectedResult)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(expectedResult))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.num1").value(num1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.num2").value(num2));
+    }
+    @Test
+    public void testAddNumbers_Failed() throws Exception {
+        // Test case for failed addition
+        int num1 = 5;
+        int num2 = 3;
+        int expectedResult = 10;  // Incorrect expected result
+
+        when(additionService.addNumbers(num1, num2)).thenReturn(expectedResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/add")
+                        .param("num1", String.valueOf(num1))
+                        .param("num2", String.valueOf(num2))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(result -> {
+                    String response = result.getResponse().getContentAsString();
+                    String expectedResponse = String.format("{\"result\":%d,\"num1\":%d,\"num2\":%d}", expectedResult, num1, num2);
+                    if (response.equals(expectedResponse)) {
+                        throw new AssertionError("Response matches incorrect expected value");
+                    }
+                });
     }
 }
+
 

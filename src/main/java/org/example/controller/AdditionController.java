@@ -1,23 +1,57 @@
 package org.example.controller;
 
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.example.service.AdditionService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AdditionController {
 
-    @GetMapping("/add")
-    public Result addNumbers(@RequestParam("num1") int num1, @RequestParam("num2") int num2) {
-        int result = num1 + num2;
+    private final AdditionService additionService;
+
+    public AdditionController(AdditionService additionService) {
+        this.additionService = additionService;
+    }
+
+    @PostMapping("/add")
+    public Result addNumbers(@RequestBody NumbersRequest request) {
+        int num1 = request.getNum1();
+        int num2 = request.getNum2();
+        int result = additionService.addNumbers(num1, num2);
+
         return new Result(result, num1, num2);
+    }
+
+    public static class NumbersRequest {
+        private int num1;
+        private int num2;
+
+        // getters and setters
+
+        public int getNum1() {
+            return num1;
+        }
+
+        public void setNum1(int num1) {
+            this.num1 = num1;
+        }
+
+        public int getNum2() {
+            return num2;
+        }
+
+        public void setNum2(int num2) {
+            this.num2 = num2;
+        }
     }
 
     public static class Result {
         private int result;
         private int num1;
         private int num2;
+
+        // getters and setters
 
         public Result(int result, int num1, int num2) {
             this.result = result;
@@ -29,13 +63,24 @@ public class AdditionController {
             return result;
         }
 
+        public void setResult(int result) {
+            this.result = result;
+        }
+
         public int getNum1() {
             return num1;
+        }
+
+        public void setNum1(int num1) {
+            this.num1 = num1;
         }
 
         public int getNum2() {
             return num2;
         }
+
+        public void setNum2(int num2) {
+            this.num2 = num2;
+        }
     }
 }
-
