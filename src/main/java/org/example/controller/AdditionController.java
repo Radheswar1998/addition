@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.service.AdditionService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,9 +16,7 @@ public class AdditionController {
     }
 
     @PostMapping("/add")
-    public Result addNumbers(@RequestBody NumbersRequest request) {
-        int num1 = request.getNum1();
-        int num2 = request.getNum2();
+    public Result addNumbers(@RequestParam int num1, @RequestParam int num2) {
         int result = additionService.addNumbers(num1, num2);
 
         return new Result(result, num1, num2);
