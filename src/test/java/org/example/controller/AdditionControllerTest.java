@@ -1,77 +1,46 @@
 package org.example.controller;
-
-import org.example.controller.AdditionController;
 import org.example.service.AdditionService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
-
-@WebMvcTest(AdditionController.class)
 public class AdditionControllerTest {
 
-    @Mock
-    private AdditionService additionService;
+    @Test
+    public void testAddNumbers() {
+        // Arrange
+        int num1 = 5;
+        int num2 = 3;
+        int expectedSum = 8;
 
-    @InjectMocks
-    private AdditionController additionController;
+        AdditionController additionController = new AdditionController(new AdditionService());
 
-    private MockMvc mockMvc;
+        // Act
+        AdditionController.Result result = additionController.addNumbers(num1, num2);
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(additionController).build();
+        // Assert
+        Assertions.assertEquals(expectedSum, result.getResult());
+        Assertions.assertEquals(num1, result.getNum1());
+        Assertions.assertEquals(num2, result.getNum2());
     }
 
     @Test
-    public void testAddNumbers() throws Exception {
-        int num1 = 5;
+    public void testAddNumbersWithNegativeNumbers() {
+        // Arrange
+        int num1 = -5;
         int num2 = 3;
-        int expectedResult = 8;
+        int expectedSum = -2;
 
-        when(additionService.addNumbers(num1, num2)).thenReturn(expectedResult);
+        AdditionController additionController = new AdditionController(new AdditionService());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/add")
-                        .param("num1", String.valueOf(num1))
-                        .param("num2", String.valueOf(num2))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value(expectedResult))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.num1").value(num1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.num2").value(num2));
-    }
-    @Test
-    public void testAddNumbers_Failed() throws Exception {
-        // Test case for failed addition
-        int num1 = 5;
-        int num2 = 3;
-        int expectedResult = 10;  // Incorrect expected result
+        // Act
+        AdditionController.Result result = additionController.addNumbers(num1, num2);
 
-        when(additionService.addNumbers(num1, num2)).thenReturn(expectedResult);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/add")
-                        .param("num1", String.valueOf(num1))
-                        .param("num2", String.valueOf(num2))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(result -> {
-                    String response = result.getResponse().getContentAsString();
-                    String expectedResponse = String.format("{\"result\":%d,\"num1\":%d,\"num2\":%d}", expectedResult, num1, num2);
-                    if (response.equals(expectedResponse)) {
-                        throw new AssertionError("Response matches incorrect expected value");
-                    }
-                });
+        // Assert
+        Assertions.assertEquals(expectedSum, result.getResult());
+        Assertions.assertEquals(num1, result.getNum1());
+        Assertions.assertEquals(num2, result.getNum2());
     }
 }
+
 
 
