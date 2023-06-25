@@ -40,6 +40,22 @@ public class AdditionControllerTest {
         Assertions.assertEquals(num1, result.getNum1());
         Assertions.assertEquals(num2, result.getNum2());
     }
+
+    @Test
+    public void testAddNumbersWithLargeNumbers() {
+        // Arrange
+        int num1 = 2;
+        int num2 = 5;
+        int expectedSum = -2;
+
+        AdditionController additionController = new AdditionController(new AdditionService());
+
+        // Act
+        AdditionController.Result result = additionController.addNumbers(num1, num2);
+
+        // Assert
+        Assertions.assertNotEquals(expectedSum, result.getResult());
+    }
 }
 
 
