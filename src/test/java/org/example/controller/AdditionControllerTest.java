@@ -3,10 +3,10 @@ import org.example.service.AdditionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AdditionControllerTest {
+class AdditionControllerTest {
 
     @Test
-    public void testAddNumbers() {
+    void testAddNumbers() {
         // Arrange
         int num1 = 5;
         int num2 = 3;
@@ -18,13 +18,13 @@ public class AdditionControllerTest {
         AdditionController.Result result = additionController.addNumbers(num1, num2);
 
         // Assert
-        Assertions.assertEquals(expectedSum, result.getResult());
+        Assertions.assertEquals(expectedSum, result.getSum());
         Assertions.assertEquals(num1, result.getNum1());
         Assertions.assertEquals(num2, result.getNum2());
     }
 
     @Test
-    public void testAddNumbersWithNegativeNumbers() {
+    void testAddNumbersWithNegativeNumbers() {
         // Arrange
         int num1 = -5;
         int num2 = 3;
@@ -36,13 +36,13 @@ public class AdditionControllerTest {
         AdditionController.Result result = additionController.addNumbers(num1, num2);
 
         // Assert
-        Assertions.assertEquals(expectedSum, result.getResult());
+        Assertions.assertEquals(expectedSum, result.getSum());
         Assertions.assertEquals(num1, result.getNum1());
         Assertions.assertEquals(num2, result.getNum2());
     }
 
     @Test
-    public void testAddNumbersWithLargeNumbers() {
+    void testAddNumbersWithLargeNumbers() {
         // Arrange
         int num1 = 2;
         int num2 = 5;
@@ -54,7 +54,7 @@ public class AdditionControllerTest {
         AdditionController.Result result = additionController.addNumbers(num1, num2);
 
         // Assert
-        Assertions.assertNotEquals(expectedSum, result.getResult());
+        Assertions.assertNotEquals(expectedSum, result.getSum());
     }
 }
 

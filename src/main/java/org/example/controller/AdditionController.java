@@ -24,24 +24,24 @@ public class AdditionController {
 
 
     public static class Result {
-        private int result;
+        private int sum;
         private int num1;
         private int num2;
 
         // getters and setters
 
-        public Result(int result, int num1, int num2) {
-            this.result = result;
+        public Result(int sum, int num1, int num2) {
+            this.sum = sum;
             this.num1 = num1;
             this.num2 = num2;
         }
 
-        public int getResult() {
-            return result;
+        public int getSum() {
+            return sum;
         }
 
-        public void setResult(int result) {
-            this.result = result;
+        public void setSum(int sum) {
+            this.sum = sum;
         }
 
         public int getNum1() {
